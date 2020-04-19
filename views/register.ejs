@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Register</title>
+    <title class = one>FitnFin</title>
+    <link rel="icon" href="/favicon.ico"></link>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    
+</head>
+<body>
+
+    <form  action="/register" method="POST"> 
+        
+        <div class="log">
+
+            
+            <p class="logp">Please sign up to proceed </p>
+
+            <input class="align un" id="usr" name="email" type="email" placeholder="Email ID" required autofocus >  
+
+            <p id="meter" class="pasmeter"></p>
+
+            <input class="align ma" id="firstpass" name="password" maxlength="25" type="password" placeholder="CREATE PASSWORD" required>  
+
+            <button  id="logsubmit" class="logbt align" type="submit">Create Account</button>
+
+            <p id ="errormess" class="fp"><%= FAILATTEMPT %></p>
+            
+         
+            
+
+        </div>
+        
+    </form>
+     
+    <script type="application/javascript" src="/index.js"></script> 
+    </body>
+</html>

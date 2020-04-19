@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard</title>
+    <link rel="icon" href="/favicon.ico"></link>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    
+</head>
+<body>
+
+    <form   method="GET"> 
+        
+        <div class="log dash">
+
+            
+            <p class="logp"> <h1>YOUR Dashboard</h1> </p>
+
+            <p class="logp1"> <%= AMOUNT %> </p>
+
+            <div class="loop1">  <p class="logp2"> <%= TOTALINCOME %> </p> </div>
+
+            <div class="loop2"> <p class="logp3"> <%= TOTALEXPENSE %> </p> </div>
+ 
+            <p class="info">*Click on DETAILS to add income and expense</p>
+
+            
+            
+
+        </div>
+        
+    </form>
+
+    <form method="GET">
+               
+        <a class="dashlog" href="/logout" role="button">Log Out</a>
+
+        <a class="dashdetails" href="/details" role="button">Details</a>
+            
+    </form>
+     
+    </body>
+</html>

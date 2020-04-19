@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Details</title>
+    <link rel="icon" href="/favicon.ico"></link>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    
+</head>
+<body>
+
+    <form method="POST"> 
+        
+        <div class="detailsdiv">
+
+            
+            <p class="track">Keep track of your money  </p>
+
+            <p  class="track1">SELECT INCOME OR EXPENSE</p>
+
+            <input  class="inradio"type="radio" id="income" name="money" value="income">
+             <label class="incomeselector">INCOME</label><br>
+             <input class="exradio" type="radio" id="expense" name="money" value="expense">
+            <label  class="expenseselector"  >EXPENSE</label><br>
+            
+
+             
+            <input type="text" name="titlebox" class="titlebox" placeholder="NAME OF INCOME OR EXPENSE"></input>
+
+            <input type="text" name="cost" id="cost" class="cost" type="number" placeholder="COST"></input>
+            
+            <button  id="additem" class="additem" type="submit">ADD</button>
+
+            <p class="deterror"> <%= AMOUNT %> </p>
+
+
+            </div>
+        
+    </form>
+
+    <form method="GET">
+         
+        <a class="detailslog" href="/logout" role="button">Log Out</a>
+
+        <a class="detailsdash" href="/dash" role="button">Dashboard</a>
+
+        <a class="detailincome" href="/allincome" role="button">ALLINCOME</a>
+
+        <a class="detailexpense" href="/allexpense" role="button">ALLEXPENSE</a>
+
+    </form>
+     
+    </body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ALLEXPENSE</title>
+    <link rel="icon" href="/favicon.ico"></link>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    
+</head>
+<body>
+
+    <form > 
+        
+        <div class="detailsdiv">
+
+            
+            <p class="track">ALL EXPENSE </p>
+   
+             <table class="newtable">
+                 <tr>
+                     
+                     <td>Name of EXPENSE</td>
+                     <td>COst</td>
+                 </tr>
+                 <% expense.forEach(function(row) { %>
+                 <tr>
+                    
+                    <td>
+                        <%= row.titlebox %>
+                    </td>
+                    <td>
+                       <%= row.cost %>
+                    </td>
+                 </tr>
+                 <%})%>
+             </table>
+        
+
+            </div>
+        
+    </form>
+
+    <form method="GET">
+
+        <a class="incomedetails" href="/details" role="button">Details</a>
+         
+        <a class="incomelog" href="/logout" role="button">Log Out</a>
+
+        <a class="incomedash" href="/dash" role="button">Dashboard</a>
+
+    </form>
+     
+    </body>
+</html>

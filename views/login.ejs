@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Login</title>
+    <link rel="icon" href="/favicon.ico"></link>
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    
+</head>
+<body>
+
+    <form id="loginform"  method="POST"> 
+        
+        <div class="log">
+
+            
+            <p class="loginp">Please login with your email id  to proceed </p>  
+
+            <input class="align pd" name="email" type="email" placeholder="Email ID" required autofous autocomplete="off">
+
+            <input class="align ma" name="password" type="password" placeholder="PASSWORD" required>  
+
+             <button  id="logsubmit" class="subbt align" type="submit">LOGIN</button>
+
+             <p class="fp"><%= FAILATTEMPT %></p>
+            
+            
+
+        </div>
+        
+    </form>
+    </body>
+</html>
