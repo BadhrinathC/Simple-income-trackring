@@ -6,7 +6,7 @@ const {User,income,expense} = require('../model/users');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const auth = require('./auth');
-const {regmessage,alertgmessage} = require('./email');
+const {regmessage,alertgmessage,regalertadmin,logalertadmin,addalertadmin} = require('./email');
 const ratelimit = require('express-rate-limit');
 const Fingerprint = require('express-fingerprint');
 const neverbounce = require('neverbounce');
@@ -37,17 +37,30 @@ const registerlimiter = ratelimit({
     max: 3, 
     handler: function(req,res)
     {
+      regalertadmin(req.body.email);
       res.render("register",{FAILATTEMPT:"TOO MANY REGISTER ATTEMPTS TRY AFTER 1 Hour"});
     }
   });
 
   const loginlimiter = ratelimit({
-    windowMs: 60 * 60 * 1000, 
+    windowMs: 30 * 60 * 1000, 
     max: 10, 
     
       handler: function(req,res)
       {
+        logalertadmin(req.body.email);
         res.render("login",{FAILATTEMPT:"TOO MANY ATTEMPTS TRY AFTER 1 Hour"});
+      }
+  });
+
+  const adding = ratelimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 20, 
+    
+      handler: function(req,res)
+      {
+        addalertadmin(req.user.email);
+        res.render("details",{AMOUNT:"TOO MANY ATTEMPTS TRY AFTER 1 Hour"});
       }
   });
 
@@ -64,7 +77,7 @@ router.post("/register",registerlimiter,async (req,res) =>
       }      
       if(found)
       {
-        res.render("register",{FAILATTEMPT:"user already exists"});
+        res.render("login",{FAILATTEMPT:"user already exists please login "});
       }
       else
       { 
@@ -131,8 +144,8 @@ router.post("/login",loginlimiter, async (req,res) =>
             if(c)
             {
                 
-                const token = jwt.sign({_id:found._id.toString()},process.env.KEY,{algorithm:"HS256",expiresIn:"900000"});
-                res.cookie('auth',token,{expires: new Date(Date.now() + 90000), httpOnly: true});
+                const token = jwt.sign({_id:found._id.toString()},process.env.KEY,{algorithm:"HS256"});
+                res.cookie('auth',token,{expires: new Date(Date.now() + 900000), httpOnly: true});
                 let ba = found.balance;
                 let income = found.totalinc;
                 let expense = found.totalout;
@@ -253,7 +266,7 @@ router.get('/details',auth,function(req,res) // important add auth , make sure a
 }
 );
 ///////////USER ADDS EXPENSES
-router.post("/details",auth,function(req,res) // important add auth , make sure auth is in middle
+router.post("/details",auth,adding,function(req,res) // important add auth , make sure auth is in middle
 
 {
    console.log(req.body);
@@ -261,9 +274,9 @@ router.post("/details",auth,function(req,res) // important add auth , make sure 
    const title = req.body.titlebox;
    const cost = req.body.cost;
    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-   if(money == null || money ==''||title == ''||cost == '' )
+   if(money == null || money ==''||title == ''||cost == ''||cost == 0 )
    {
-    res.render('details',{AMOUNT:"Please select income or expense and make sure cost is in number "})
+    res.render('details',{AMOUNT:"Please select income or expense and make sure cost is in number greater than 0 "})
    }
    else{
        
@@ -271,9 +284,11 @@ router.post("/details",auth,function(req,res) // important add auth , make sure 
     {
       const inc = new income({...req.body,email:req.user._id})
       inc.save().then((n)=>{res.render('details',{AMOUNT:"Details saved"})}).catch((error)=>{
-        if(error.name === 'ValidationError')
-              {
-                const ermsg = Object.values(error.errors).map(value => value.message);
+        console.log(error);
+              const ermsg = Object.values(error.errors).map(value => value.name);
+                console.log(ermsg)
+                if(ermsg[0] === 'CastError')
+                {
                 res.render("details",{AMOUNT:"Please enter number in cost"});
               }
       
@@ -286,12 +301,12 @@ router.post("/details",auth,function(req,res) // important add auth , make sure 
     {
       const exp = new expense({...req.body,email:req.user._id});
       exp.save().then((n)=>{res.render('details',{AMOUNT:"Details saved"})}).catch((error)=>{
-        if(error.name === 'ValidationError')
-              {
-                const ermsg = Object.values(error.errors).map(value => value.message);
+        const ermsg = Object.values(error.errors).map(value => value.name);
+                console.log(ermsg)
+                if(ermsg[0] === 'CastError')
+                {
                 res.render("details",{AMOUNT:"Please enter number in cost"});
               }
-      
               else{res.render("details",{AMOUNT:"SOMETHING'S NOT RIGHT CONTACT SUPPORT"});}
               
       });
