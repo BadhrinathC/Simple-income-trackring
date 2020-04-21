@@ -11,22 +11,25 @@
 </head>
 <body>
 
-    <form > 
+    <form method="GET" > 
         
         <div class="detailsdiv">
-
-            
+   
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>" />         
             <p class="track">ALL INCOME </p>
    
              <table class="newtable">
                  <tr >
-                     
+                     <td>DATE</td>
                      <td>NAME OF INCOME</td>
                      <td> AMOUNT </td>
                  </tr>
                  <% income.forEach(function(row) { %>
                  <tr>
-                    
+                    <td>
+            
+                        <%= row.time %>
+                    </td>
                      <td>
                          <%= row.titlebox %>
                      </td>
