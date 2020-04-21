@@ -2,7 +2,8 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const validator = require('validator');
 const argon2 = require('argon2');
-//const ClientJS = require('clientjs');
+const dateonly = require('mongoose-dateonly')(mongoose)
+
 
 const secUser = new mongoose.Schema({
 
@@ -12,13 +13,12 @@ const secUser = new mongoose.Schema({
     validate(value)
     {
       if(!validator.isEmail(value)){ throw new Error("Not a valid email") }
-    
     }
   },
   password: {
     type: String,
     required: true,
-    minlength:[8,"Minimum length required is eight"]
+    minlength:[10,"Minimum length required is ten"]
   },
   devicename:{
     type:String,
@@ -59,7 +59,10 @@ const monthinc = new mongoose.Schema({
 
   titlebox:{
     type:String,
-    required:true
+    required:true,
+    matches:{
+      options: ["^[a-z ,.'-]+$", "i"],
+    errorMessage: "The first name can only contain letters and the characters"}
   },
   cost:{
     type:Number
@@ -68,7 +71,8 @@ const monthinc = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId, 
     ref: 'User'
   },
-  time:{type:Date,default:Date.now}
+  time:{type:dateonly,
+    default:new dateonly(Date.now())}  
 
 });
 
@@ -87,9 +91,8 @@ const monthexp = new mongoose.Schema({
   email:{type:mongoose.Schema.Types.ObjectId, 
     ref: 'User'
   },
-  time:{
-    type:Date,
-    default:Date.now}
+  time:{type:dateonly,
+    default:new dateonly(Date.now())}
 
 });
 
@@ -103,6 +106,10 @@ secUser.pre('save', async function(next)
    next();
 });
 
+monthinc.pre('save', function(next){
+  this.time = dateonly;
+  next(); 
+})
 
 
 const User = mongoose.model('User',secUser);
