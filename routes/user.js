@@ -11,6 +11,7 @@ const ratelimit = require('express-rate-limit');
 const Fingerprint = require('express-fingerprint');
 const neverbounce = require('neverbounce');
 const session = require('express-session');
+const csrfprotection = require('../app')
 
 const x="";
 const y="";
@@ -77,7 +78,7 @@ router.post("/register",registerlimiter,async (req,res) =>
       }      
       if(found)
       {
-        res.render("login",{FAILATTEMPT:"user already exists please login "});
+        res.render("existuser",{FAILATTEMPT:"user already exists please login "});
       }
       else
       { 
@@ -126,8 +127,7 @@ router.post("/register",registerlimiter,async (req,res) =>
 /////////////USER LOGS IN
 router.post("/login",loginlimiter, async (req,res) =>
 {
-    
-    
+       
      const user =await User.findOne({email:req.body.email},function(err,found){
         
        if(err)
@@ -144,7 +144,7 @@ router.post("/login",loginlimiter, async (req,res) =>
             if(c)
             {
                 
-                const token = jwt.sign({_id:found._id.toString()},process.env.KEY,{algorithm:"HS256"});
+                const token = jwt.sign({_id:found._id.toString()},process.env.KEY,{algorithm:"HS256",expiresIn:"900000"});
                 res.cookie('auth',token,{expires: new Date(Date.now() + 900000), httpOnly: true});
                 let ba = found.balance;
                 let income = found.totalinc;
@@ -205,7 +205,6 @@ router.post("/login",loginlimiter, async (req,res) =>
     }
     
          
-    
     
 });
 
@@ -276,6 +275,7 @@ router.post("/details",auth,adding,function(req,res) // important add auth , mak
    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
    if(money == null || money ==''||title == ''||cost == ''||cost == 0 )
    {
+    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
     res.render('details',{AMOUNT:"Please select income or expense and make sure cost is in number greater than 0 "})
    }
    else{
@@ -289,10 +289,14 @@ router.post("/details",auth,adding,function(req,res) // important add auth , mak
                 console.log(ermsg)
                 if(ermsg[0] === 'CastError')
                 {
+                  res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
                 res.render("details",{AMOUNT:"Please enter number in cost"});
               }
       
-              else{res.render("details",{AMOUNT:"SOMETHING'S NOT RIGHT CONTACT SUPPORT"});}
+              else{
+                res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+                res.render("details",{AMOUNT:"SOMETHING'S NOT RIGHT CONTACT SUPPORT"});
+              }
               
       });
       
@@ -305,9 +309,12 @@ router.post("/details",auth,adding,function(req,res) // important add auth , mak
                 console.log(ermsg)
                 if(ermsg[0] === 'CastError')
                 {
+                  res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
                 res.render("details",{AMOUNT:"Please enter number in cost"});
               }
-              else{res.render("details",{AMOUNT:"SOMETHING'S NOT RIGHT CONTACT SUPPORT"});}
+              else{res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+
+                res.render("details",{AMOUNT:"SOMETHING'S NOT RIGHT CONTACT SUPPORT"});}
               
       });
     }
