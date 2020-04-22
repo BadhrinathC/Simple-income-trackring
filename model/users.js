@@ -60,9 +60,12 @@ const monthinc = new mongoose.Schema({
   titlebox:{
     type:String,
     required:true,
-    matches:{
-      options: ["^[a-z ,.'-]+$", "i"],
-    errorMessage: "The first name can only contain letters and the characters"}
+    validate(value)
+    
+    {
+      if(!validator.isAlphanumeric(value)){ throw new Error("Please enter valid terms") }
+    }
+
   },
   cost:{
     type:Number
@@ -83,7 +86,12 @@ const monthexp = new mongoose.Schema({
  },
   titlebox:{
     type:String,
-    required:true
+    required:true,
+    validate(value)
+    
+    {
+      if(!validator.isAlphanumeric(value)){ throw new Error("Please enter valid terms") }
+    }
   },
   cost:{
     type:Number
@@ -106,10 +114,6 @@ secUser.pre('save', async function(next)
    next();
 });
 
-monthinc.pre('save', function(next){
-  this.time = dateonly;
-  next(); 
-})
 
 
 const User = mongoose.model('User',secUser);
