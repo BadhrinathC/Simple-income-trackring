@@ -11,7 +11,7 @@ const ratelimit = require('express-rate-limit');
 const Fingerprint = require('express-fingerprint');
 const neverbounce = require('neverbounce');
 const session = require('express-session');
-const csrfprotection = require('../app')
+
 
 const x="";
 const y="";
@@ -35,7 +35,7 @@ router.use(Fingerprint({
 
 const registerlimiter = ratelimit({
     windowMs: 60 * 60 * 1000, 
-    max: 3, 
+    max: 5, 
     handler: function(req,res)
     {
       regalertadmin(req.body.email);
@@ -292,7 +292,11 @@ router.post("/details",auth,adding,function(req,res) // important add auth , mak
                   res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
                 res.render("details",{AMOUNT:"Please enter number in cost"});
               }
-      
+              if(ermsg[0] === 'ValidatorError')
+              {
+                res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+              res.render("details",{AMOUNT:"Please use alphabets and numbers in  details"});
+            } 
               else{
                 res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
                 res.render("details",{AMOUNT:"SOMETHING'S NOT RIGHT CONTACT SUPPORT"});
@@ -312,6 +316,11 @@ router.post("/details",auth,adding,function(req,res) // important add auth , mak
                   res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
                 res.render("details",{AMOUNT:"Please enter number in cost"});
               }
+              if(ermsg[0] === 'ValidatorError')
+              {
+                res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+              res.render("details",{AMOUNT:"Please use alphabets and numbers in  details  "});
+            } 
               else{res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 
                 res.render("details",{AMOUNT:"SOMETHING'S NOT RIGHT CONTACT SUPPORT"});}
@@ -326,7 +335,7 @@ router.post("/details",auth,adding,function(req,res) // important add auth , mak
 
 router.get('/allincome',auth,async (req,res) =>
 {
-   let allinc =  await income.find({email:req.user._id})
+   let allinc =  await income.find({email:req.user._id}).sort({time:-1})
    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
    res.render("allincome",{income:allinc})
 
@@ -334,7 +343,7 @@ router.get('/allincome',auth,async (req,res) =>
 
 router.get('/allexpense',auth,async (req,res) =>
 {
-   let allexp =  await expense.find({email:req.user._id})
+   let allexp =  await expense.find({email:req.user._id}).sort({time:-1})
    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
    res.render("allincome",{income:allexp})
 
