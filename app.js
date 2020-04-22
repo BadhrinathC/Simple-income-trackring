@@ -19,7 +19,7 @@ let n = " ";
 
 app.use(helmet());
 
-app.use(helmet.hidePoweredBy({setTo: 'DummyServer 1.0'}));
+app.use(helmet.hidePoweredBy({setTo: 'PHP 7.0 '}));
 
 app.use(helmet.contentSecurityPolicy({
     directives: {
@@ -36,16 +36,30 @@ app.use(bodyparser.urlencoded({extended: true}));
 
 app.use(express.json());
 
+
+
+
 app.use(cookieparser());
 
+app.use(csurf({
+     cookie:{
+       path:'/',
+       httpOnly:true,
+       secure:true,
+       sameSite:true,
+       maxAge:15*60*1000
+     }
+   
+}));
 
-
-app.use(csurf({cookie: true}));
-
+  // Make the token available to all views
   app.use(function (req, res, next){
       res.locals.csrfToken = req.csrfToken();
       next();
    });
+
+
+
 
 app.use(newrouter);
 
@@ -79,3 +93,5 @@ app.get('/login',function(req,res){
    
 
 app.listen(process.env.PORT||4000);
+
+//module.exports = csrfProtection;
